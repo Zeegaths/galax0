@@ -1,0 +1,103 @@
+/* purgecss start ignore */
+
+@tailwind base;
+@tailwind components;
+
+html {
+  font-family: "Rubik", sans-serif;
+  font-size: 16px; /* Adjust for better scaling */
+  line-height: 1.6; /* Improve readability */
+  color: #f4f4f4; /* Use a light neutral color for better contrast */
+}
+
+body {
+  font-weight: 400; /* Default weight for regular text */
+  background-color: #171031; /* Ensure consistent dark background */
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700; /* Use bold for headings */
+  color: #01F3F4; /* Highlight with a primary accent color */
+}
+
+p, li {
+  font-weight: 400; /* Keep body text regular weight */
+  color: #cccccc; /* Slightly lighter shade for text */
+}
+
+.animation-hover:after {
+  background: none repeat scroll 0 0 transparent;
+  content: "";
+  height: 2px;
+  transition: width 0.3s ease 0s, left 0.3s ease 0s;
+  @apply w-0 bg-customOrange left-1/2 block bottom-0 absolute;
+}
+.animation-active:after {
+  @apply left-0 w-full;
+}
+.animation-hover:hover:after {
+  @apply left-0 w-full;
+}
+
+li.custom-list:before {
+  content: "\2022"; /* bullet point, for screen readers */
+  text-indent: -9999999px; /* move the bullet point out of sight */
+  width: 0.4em;
+  height: 1em;
+  background-repeat: no-repeat;
+  background-size: 0.4em 0.7em;
+  background-position: 0 0.3em;
+  font-size: 300%;
+  top: -0.35em;
+  @apply absolute block;
+}
+
+li.circle-check:before {
+  background-image: url("/assets/Icon/checklist.svg");
+  left: -0.7em;
+  top: -0.4em;
+}
+
+li.check:before {
+  left: -0.5em;
+  background-image: url("/assets/Icon/jam_check.svg");
+  top: -0.5em;
+  font-size: 400%;
+}
+
+/* Slideshow */
+.slick-dots li {
+  @apply inline-block;
+}
+.slick-dots span {
+  @apply bg-gray-500;
+}
+.slick-dots .slick-active span {
+  @apply bg-customOrange rounded-l-full rounded-r-full w-12;
+}
+
+/* Buttons */
+button {
+  font-family: "Rubik", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+  @apply px-4 py-2 rounded bg-[#FE664F] hover:bg-[#d9434f];
+}
+
+/* Links */
+a {
+  font-family: "Rubik", sans-serif;
+  font-weight: 500;
+  color: #01F3F4;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #FE664F;
+}
+
+/* purgecss end ignore */
+@tailwind utilities;
+/* purgecss start ignore */
+/* purgecss end ignore */
