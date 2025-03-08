@@ -1,26 +1,51 @@
 'use client'; 
 import React, { useState, useEffect } from "react";
+import Link from 'next/link';
 import 'tailwindcss/tailwind.css';
 import { useAccount } from 'wagmi';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+
+// Define interface for chain report data
+interface ChainData {
+  chain: string;
+  status: string;
+  riskLevel: string;
+}
+
+// Define interface for score factor data
+interface ScoreFactor {
+  score: number;
+  percentage: number;
+}
+
+// Define interface for all score factors
+interface ScoreFactors {
+  transactionHistory: ScoreFactor;
+  assetManagement: ScoreFactor;
+  defiBehavior: ScoreFactor;
+  networkEffect: ScoreFactor;
+}
 
 const CreditScore: React.FC = () => {
   const { address, isConnected } = useAccount();
   const [score, setScore] = useState<number>(0);
   const [scoreCategory, setScoreCategory] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [scoreFactors, setScoreFactors] = useState({
+  const [scoreFactors, setScoreFactors] = useState<ScoreFactors>({
     transactionHistory: { score: 0, percentage: 0 },
     assetManagement: { score: 0, percentage: 0 },
     defiBehavior: { score: 0, percentage: 0 },
     networkEffect: { score: 0, percentage: 0 }
   });
-  const [chainReport, setChainReport] = useState([
+  
+  // Use const for data that doesn't need to be updated
+  const chainReport: ChainData[] = [
     { chain: "Base Sepolia", status: "Trusted", riskLevel: "low" },
     { chain: "Ethereum Sepolia", status: "Trusted", riskLevel: "low" },
     { chain: "Linea Testnet", status: "Risky", riskLevel: "high" },
     { chain: "Sonic", status: "Analyzing", riskLevel: "medium" }
-  ]);
+  ];
+  
   const [positiveFactors, setPositiveFactors] = useState<string[]>([]);
   const [improvementAreas, setImprovementAreas] = useState<string[]>([]);
   const [aiRecommendation, setAiRecommendation] = useState<string>("");
@@ -132,27 +157,24 @@ const CreditScore: React.FC = () => {
       <aside className="w-64 bg-[#171031] flex flex-col">
         <div className="p-4 text-lg font-bold text-[#01F3F4]">Coin Portfolio</div>
         <nav className="mt-4 space-y-2 px-4">
-          <a
-            href="/"
-            className="block py-2 px-4 text-white rounded hover:bg-[#FE664F]"
-          >
+          <Link href="/" className="block py-2 px-4 text-white rounded hover:bg-[#FE664F]">
             Dashboard
-          </a>
-          <a href="/home" className="block py-2 px-4 rounded hover:bg-[#FE664F]">
+          </Link>
+          <Link href="/home" className="block py-2 px-4 rounded hover:bg-[#FE664F]">
             Home
-          </a>
-          <a href="/credit-score" className="block py-2 px-4 bg-[#FE664F] text-white rounded">
+          </Link>
+          <Link href="/credit-score" className="block py-2 px-4 bg-[#FE664F] text-white rounded">
             Credit Score
-          </a>
-          <a href="#" className="block py-2 px-4 rounded hover:bg-[#FE664F]">
+          </Link>
+          <Link href="#" className="block py-2 px-4 rounded hover:bg-[#FE664F]">
             Asset Allocation
-          </a>
-          <a href="#" className="block py-2 px-4 rounded hover:bg-[#FE664F]">
+          </Link>
+          <Link href="#" className="block py-2 px-4 rounded hover:bg-[#FE664F]">
             Discover
-          </a>
-          <a href="#" className="block py-2 px-4 rounded hover:bg-[#FE664F]">
+          </Link>
+          <Link href="#" className="block py-2 px-4 rounded hover:bg-[#FE664F]">
             Docs
-          </a>
+          </Link>
         </nav>
 
         <div className="mt-auto p-4">
