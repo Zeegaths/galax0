@@ -166,8 +166,8 @@ const TradingMatrixBackground: React.FC = () => {
       for (let l = 0; l < lineCount; l++) {
         ctx.beginPath();
         
-        // Start position
-        let startY = canvas.height - (canvas.height / 4) * Math.random() - 50;
+        // Start position - changed 'let' to 'const' as it's never reassigned
+        const startY = canvas.height - (canvas.height / 4) * Math.random() - 50;
         ctx.moveTo(0, startY);
         
         // Create wave points

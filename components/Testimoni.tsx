@@ -1,148 +1,157 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
+import Slider from "react-slick";
+import { FaArrowRight, FaArrowLeft } from "react-icons/fa";
 
-interface Testimonial {
-  name: string;
-  image: string;
-  city: string;
-  country: string;
-  rating: string;
-  testimoni: string;
-}
+const Testimoni = () => {
+  const [sliderRef, setSliderRef] = useState<Slider | null>(null);
 
-const Testimoni = ({
-  listTestimoni = [
+  const settings = {
+    dots: true,
+    customPaging: function () {
+      return (
+        <a className="">
+          <span className="mx-2 rounded-l-full rounded-r-full h-4 w-4 block cursor-pointer transition-all"></span>
+        </a>
+      );
+    },
+    dotsClass: "slick-dots w-max absolute mt-20",
+    infinite: true,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 2,
+    responsive: [
+      {
+        breakpoint: 770,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2,
+          initialSlide: 2,
+        },
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
+      },
+    ],
+  };
+
+  const testimonials = [
     {
-      name: "Sarah Johnson",
-      image: "/assets/people-3.png",
-      city: "New York",
-      country: "USA",
-      rating: "4.7",
-      testimoni: "Galax0 has transformed the way I manage my crypto portfolio. The zkCreditScore feature is a game-changer for secure lending.",
+      name: "Viezh Robert",
+      image: "/assets/testimony-1.png",
+      city: "Warsaw",
+      country: "Poland",
+      rating: "4.5",
+      testimoni:
+        "The score calculation is very accurate and transparent. I can see how my activities impact my score!",
     },
     {
-      name: "David Kim",
+      name: "Yessica Christy",
+      image: "/assets/testimony-2.png",
+      city: "Shanxi",
+      country: "China",
+      rating: "4.5",
+      testimoni:
+        "I was skeptical at first, but the DeFi opportunities I&apos;ve unlocked with my score have been game-changing.",
+    },
+    {
+      name: "Kim Young Jou",
+      image: "/assets/people-2.png",
+      city: "Seoul",
+      country: "South Korea",
+      rating: "4.5",
+      testimoni:
+      "This is unbelievably good. I've improved my score by 150 points in just 3 months by following the recommendations!",
+    },
+    {
+      name: "Alex Morgan",
+      image: "/assets/people-2.png",
+      city: "New York",
+      country: "United States",
+      rating: "4.5",
+      testimoni:
+        "The multi-chain analysis gives a complete picture of my crypto behavior. Very comprehensive!",
+    },
+    {
+      name: "Sophia Chen",
       image: "/assets/people-2.png",
       city: "Singapore",
       country: "Singapore",
-      rating: "4.9",
-      testimoni: "I can track my NFT collections and DeFi positions seamlessly. Galax0 is perfect for advanced analytics.",
+      rating: "4.5",
+      testimoni:
+        "I managed to get preferential rates on a DeFi loan because of my excellent credit score. Worth every penny!",
     },
-    {
-      name: "Emma Brown",
-      image: "/assets/people-1.png",
-      city: "Berlin",
-      country: "Germany",
-      rating: "4.8",
-      testimoni: "The integration with multiple wallets and private data encryption makes Galax0 my top choice for asset tracking.",
-    },
-  ],
-}: {
-  listTestimoni?: Testimonial[];
-}) => {
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  const scrollLeft = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({
-        left: -300, // Adjusted for responsiveness
-        behavior: "smooth",
-      });
-    }
-  };
-
-  const scrollRight = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({
-        left: 300, // Adjusted for responsiveness
-        behavior: "smooth",
-      });
-    }
-  };
+  ];
 
   return (
-    <div className="relative w-full max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div
-        ref={scrollRef}
-        className="flex overflow-x-auto space-x-4 py-4 scrollbar-hide"
-        style={{
-          scrollSnapType: "x mandatory",
-          WebkitOverflowScrolling: "touch",
-        }}
+    <>
+      <Slider
+        ref={setSliderRef}
+        {...settings}
+        arrows={false}
+        className="flex items-stretch justify-items-stretch"
       >
-        {listTestimoni.map((testimonial, index) => (
-          <div
-            key={index}
-            className="flex-shrink-0 w-72 sm:w-80 bg-white border border-gray-200 rounded-xl shadow-md p-4 sm:p-6 scroll-snap-align-start"
-          >
-            <div className="flex items-center mb-4">
-              <Image
-                src={testimonial.image}
-                alt={testimonial.name}
-                width={50}
-                height={50}
-                className="rounded-full mr-3 sm:mr-4 w-10 h-10 sm:w-12 sm:h-12"
-              />
-              <div className="flex-grow">
-                <h3 className="font-bold text-base sm:text-lg">
-                  {testimonial.name}
-                </h3>
-                <p className="text-gray-500 text-xs sm:text-sm">
-                  {testimonial.city}, {testimonial.country}
-                </p>
+        {testimonials.map((testimoni, index) => (
+          <div className="px-3 flex items-stretch" key={index}>
+            <div className="border-2 border-gray-500 hover:border-orange-500 transition-all rounded-lg p-8 flex flex-col">
+              <div className="flex flex-col xl:flex-row w-full items-stretch xl:items-center">
+                <div className="flex order-2 xl:order-1">
+                  <Image
+                    src={testimoni.image}
+                    height={50}
+                    width={50}
+                    alt="Icon People"
+                  />
+                  <div className="flex flex-col ml-5 text-left">
+                    <p className="text-lg text-black-600 capitalize">
+                      {testimoni.name}
+                    </p>
+                    <p className="text-sm text-black-500 capitalize">
+                      {testimoni.city}, {testimoni.country}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex flex-none items-center ml-auto order-1 xl:order-2">
+                  <p className="text-sm">{testimoni.rating}</p>
+                  <span className="flex ml-4">
+                    <svg
+                      className="w-4 h-4 text-yellow-500"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  </span>
+                </div>
               </div>
-              <div className="text-yellow-500 text-sm sm:text-base">
-                {testimonial.rating} ★
-              </div>
+              <p className="mt-5 text-left">"{testimoni.testimoni}"</p>
             </div>
-            <p className="italic text-gray-600 text-sm sm:text-base">
-              "{testimonial.testimoni}"
-            </p>
           </div>
         ))}
+      </Slider>
+      <div className="flex w-full items-center justify-end">
+        <div className="flex flex-none justify-between w-auto mt-14">
+          <div
+            className="mx-4 flex items-center justify-center h-14 w-14 rounded-full bg-white border-orange-500 border hover:bg-orange-500 hover:text-white-500 transition-all text-orange-500 cursor-pointer"
+            onClick={sliderRef?.slickPrev}
+          >
+            <FaArrowLeft />
+          </div>
+          <div
+            className="flex items-center justify-center h-14 w-14 rounded-full bg-white border-orange-500 border hover:bg-orange-500 hover:text-white-500 transition-all text-orange-500 cursor-pointer"
+            onClick={sliderRef?.slickNext}
+          >
+            <FaArrowRight />
+          </div>
+        </div>
       </div>
-
-      {/* Navigation Arrows - Hidden on small screens */}
-      <button
-        onClick={scrollLeft}
-        className="hidden sm:block absolute left-0 top-1/2 -translate-y-1/2 bg-white shadow-md rounded-full p-2 z-10 hover:bg-gray-100 transition"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M15 19l-7-7 7-7"
-          />
-        </svg>
-      </button>
-      <button
-        onClick={scrollRight}
-        className="hidden sm:block absolute right-0 top-1/2 -translate-y-1/2 bg-white shadow-md rounded-full p-2 z-10 hover:bg-gray-100 transition"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M9 5l7 7-7 7"
-          />
-        </svg>
-      </button>
-    </div>
+    </>
   );
 };
 

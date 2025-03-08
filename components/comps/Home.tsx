@@ -4,6 +4,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "tailwindcss/tailwind.css";
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import Link from 'next/link';
 import {
   LineChart,
   Line,
@@ -312,24 +313,24 @@ export default function Home(): React.ReactElement {
 
         {/* Navigation */}
         <nav className="mt-4 space-y-2 px-4">
-          <a
+          <Link
             href="/"
             className="block py-2 px-4 text-white rounded hover:bg-[#FE664F]"
           >
             Dashboard
-          </a>
+          </Link>
           <a
-            href="/portfolio"
+            href="/home"
             className="block py-2 px-4 rounded hover:bg-[#FE664F]"
           >
             Portfolio
           </a>
-          <a
+          <Link
             href="/credit-score"
             className="block py-2 px-4 rounded hover:bg-[#FE664F]"
           >
             Credit Score
-          </a>
+          </Link>
           <a href="/allocation" className="block py-2 px-4 rounded hover:bg-[#FE664F]">
             Asset Allocation
           </a>
@@ -394,35 +395,35 @@ export default function Home(): React.ReactElement {
 
         {/* Wallets Section */}
         <div className="mt-8 px-4">
-          <div className="flex justify-between items-center mb-2">
-            <h2 className="text-sm font-medium text-[#01F3F4]">
-              Your Wallets
-            </h2>
-            <span className="text-xs text-green-400">
-              Total: {formatUSD(totalWalletBalance)}
-            </span>
+  <div className="flex justify-between items-center mb-2">
+    <h2 className="text-sm font-medium text-[#01F3F4]">
+      Your Wallets
+    </h2>
+    <span className="text-xs text-green-400">
+      Total: {formatUSD(totalWalletBalance)}
+    </span>
+  </div>
+  
+  {/* Wallet list */}
+  <ul className="space-y-2 max-h-48 overflow-y-auto pr-1 mb-3">
+    {connectedWallets.map((wallet) => (
+      <li key={wallet.id} className="flex items-center justify-between p-2 rounded bg-[#1A1339] hover:bg-[#231A45]">
+        <div className="flex items-center space-x-2">
+          <span className="w-6 h-6 rounded-full bg-gray-500 flex-shrink-0"></span>
+          <div className="flex flex-col">
+            <span className="text-sm">{wallet.name}</span>
+            <span className="text-xs text-gray-400">{formatAddress(wallet.address)}</span>
           </div>
-          
-          {/* Wallet list */}
-          <ul className="space-y-2 max-h-48 overflow-y-auto pr-1 mb-3">
-            {connectedWallets.map((wallet) => (
-              <li key={wallet.id} className="flex items-center justify-between p-2 rounded bg-[#1A1339] hover:bg-[#231A45]">
-                <div className="flex items-center space-x-2">
-                  <span className="w-6 h-6 rounded-full bg-gray-500 flex-shrink-0"></span>
-                  <div className="flex flex-col">
-                    <span className="text-sm">{wallet.name}</span>
-                    <span className="text-xs text-gray-400">{formatAddress(wallet.address)}</span>
-                  </div>
-                </div>
-                <div className="flex flex-col items-end">
-                  <span className="text-sm font-medium text-green-300">
-                    {walletBalances[wallet.address] || "$0.00"}
-                  </span>
-                  <span className="text-xs text-gray-400">{getChainName(wallet.chainId)}</span>
-                </div>
-              </li>
-            ))}
-          </ul>
+        </div>
+        <div className="flex flex-col items-end">
+          <span className="text-sm font-medium text-green-300">
+            {walletBalances[wallet.address] || "$0.00"}
+          </span>
+          <span className="text-xs text-gray-400">{getChainName(wallet.chainId)}</span>
+        </div>
+      </li>
+    ))}
+  </ul>
           
           {/* Add Wallet Button/Form */}
           {!showWalletForm ? (
