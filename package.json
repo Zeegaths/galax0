@@ -11,8 +11,10 @@
   "dependencies": {
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.2.0",
+    "@rainbow-me/rainbowkit": "^2.2.4",
     "@starknet-react/core": "^3.6.2",
     "@svgr/webpack": "^8.1.0",
+    "@tanstack/react-query": "^5.67.1",
     "bowser": "^2.11.0",
     "framer-motion": "^11.12.0",
     "jotai": "^2.10.3",
@@ -24,7 +26,9 @@
     "react-slick": "^0.30.2",
     "recharts": "^2.14.1",
     "slick-carousel": "^1.8.1",
-    "starknet": "^6.11.0"
+    "starknet": "^6.11.0",
+    "viem": "^2.23.7",
+    "wagmi": "^2.14.12"
   },
   "devDependencies": {
     "@types/node": "^20",

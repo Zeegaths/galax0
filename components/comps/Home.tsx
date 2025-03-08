@@ -1,8 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "tailwindcss/tailwind.css";
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 import {
   LineChart,
   Line,
@@ -12,10 +13,55 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
 } from "recharts";
 
-export default function Home() {
-  const [transactions, setTransactions] = useState([
+// Define proper types for your component
+interface Transaction {
+  id: string;
+  asset: string;
+  action: string;
+  date: string;
+  amount: string;
+  status: string;
+}
+
+interface ConnectedWallet {
+  id: number;
+  address: string;
+  name: string;
+  icon: string;
+  chainId: number;
+}
+
+interface PortfolioCoin {
+  name: string;
+  symbol: string;
+  amount: string;
+  usdValue: number;
+  percentChange: number;
+}
+
+interface TradingCategoryCoin {
+  symbol: string;
+  name: string;
+  price: string;
+  change: string;
+}
+
+interface TradingCategory {
+  title: string;
+  riskLevel: string;
+  description: string;
+  coins: TradingCategoryCoin[];
+}
+
+// Define the Home component properly with function keyword and export
+export default function Home(): React.ReactElement {
+  // Transaction state
+  const [transactions, setTransactions] = useState<Transaction[]>([
     {
       id: "5001",
       asset: "BTC",
@@ -33,15 +79,34 @@ export default function Home() {
       status: "In Progress",
     },
   ]);
-  const [wallets, setWallets] = useState([
-    "Binance Wallet",
-    "Photon Wallet",
-    "Bitmex Wallet",
+  
+  // Wallet management state
+  const [showWalletForm, setShowWalletForm] = useState<boolean>(false);
+  const [newWallet, setNewWallet] = useState<string>("");
+  const [newWalletBalance, setNewWalletBalance] = useState<string>("");
+  
+  // Connected wallets state (from RainbowKit)
+  const [connectedWallets, setConnectedWallets] = useState<ConnectedWallet[]>([]);
+  
+  // Wallet balances
+  const [walletBalances, setWalletBalances] = useState<Record<string, string>>({
+    "0x1234...5678": "$12,450.32",
+    "0x8765...4321": "$8,750.65",
+    "0x5432...8765": "$9,500.98",
+  });
+
+  // Portfolio coin holdings
+  const [portfolioCoins, setPortfolioCoins] = useState<PortfolioCoin[]>([
+    { name: "Bitcoin", symbol: "BTC", amount: "0.42", usdValue: 30289.76, percentChange: 2.3 },
+    { name: "Ethereum", symbol: "ETH", amount: "5.8", usdValue: 23093.69, percentChange: 1.8 },
+    { name: "Solana", symbol: "SOL", amount: "62.5", usdValue: 10778.13, percentChange: 4.2 },
+    { name: "Polygon", symbol: "MATIC", amount: "1200", usdValue: 948.00, percentChange: -0.5 },
+    { name: "Cardano", symbol: "ADA", amount: "3500", usdValue: 1715.00, percentChange: -1.2 },
+    { name: "Avalanche", symbol: "AVAX", amount: "32", usdValue: 1255.68, percentChange: 5.7 },
   ]);
-  const [newWallet, setNewWallet] = useState("");
 
   // Trading categories data
-  const tradingCategories = [
+  const tradingCategories: TradingCategory[] = [
     {
       title: "DCA / Long Term",
       riskLevel: "Low Risk",
@@ -80,15 +145,83 @@ export default function Home() {
     }
   ];
 
-  const [activeCategory, setActiveCategory] = useState(0);
+  const [activeCategory, setActiveCategory] = useState<number>(0);
 
-  const handleAddWallet = () => {
-    if (newWallet.trim() !== "") {
-      setWallets([...wallets, newWallet.trim()]);
-      setNewWallet("");
-    }
+  // Simulate RainbowKit wallet connection updates
+  useEffect(() => {
+    // This is a mock for demonstration purposes
+    const mockWallets: ConnectedWallet[] = [
+      { 
+        id: 1, 
+        address: "0x1234...5678", 
+        name: "MetaMask", 
+        icon: "yellow",
+        chainId: 1 // Ethereum
+      },
+      { 
+        id: 2, 
+        address: "0x8765...4321", 
+        name: "Coinbase Wallet", 
+        icon: "blue",
+        chainId: 1 // Ethereum
+      },
+      { 
+        id: 3, 
+        address: "0x5432...8765", 
+        name: "WalletConnect", 
+        icon: "red",
+        chainId: 137 // Polygon
+      }
+    ];
+    
+    setConnectedWallets(mockWallets);
+  }, []);
+
+  // Function to connect additional wallets
+  const connectAdditionalWallet = () => {
+    // In a real implementation, this would trigger the RainbowKit modal
+    alert("Connect wallet functionality would open the RainbowKit wallet selection modal");
+    
+    // Simulate adding a new wallet after connection
+    const newWalletAddress = `0x${Math.random().toString(16).slice(2, 10)}...${Math.random().toString(16).slice(2, 10)}`;
+    const randomBalance = `$${(Math.random() * 10000).toFixed(2)}`;
+    
+    // Update balances
+    setWalletBalances(prev => ({
+      ...prev,
+      [newWalletAddress]: randomBalance
+    }));
+    
+    // Add to connected wallets
+    const walletProviders = ["Rainbow", "Trust Wallet", "Ledger", "Phantom", "Argent"];
+    const randomProvider = walletProviders[Math.floor(Math.random() * walletProviders.length)];
+    const iconColors = ["green", "purple", "teal", "orange", "pink"];
+    const randomIcon = iconColors[Math.floor(Math.random() * iconColors.length)];
+    
+    setConnectedWallets(prev => [
+      ...prev,
+      { 
+        id: prev.length + 1, 
+        address: newWalletAddress, 
+        name: randomProvider, 
+        icon: randomIcon,
+        chainId: Math.random() > 0.5 ? 1 : 137
+      }
+    ]);
   };
 
+  // Function to add a custom wallet
+  const handleAddWallet = () => {
+    if (newWallet.trim() === '') return;
+    
+    // Here you would handle adding a new wallet
+    // This is just a placeholder since the original code didn't fully implement this
+    setNewWallet('');
+    setNewWalletBalance('');
+    setShowWalletForm(false);
+  };
+
+  // Chart data
   const data = [
     { name: "Jan", PNL: 100 },
     { name: "Feb", PNL: 200 },
@@ -126,6 +259,49 @@ export default function Home() {
     ]);
   };
 
+  // Calculate total wallet balance
+  const totalWalletBalance = Object.values(walletBalances).reduce((total, balance) => {
+    const balanceValue = parseFloat(balance.replace('$', '').replace(',', '')) || 0;
+    return total + balanceValue;
+  }, 0);
+
+  // Calculate total portfolio value from coins
+  const totalPortfolioValue = portfolioCoins.reduce((total, coin) => total + coin.usdValue, 0);
+
+  // Format number to USD
+  const formatUSD = (value: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    }).format(value);
+  };
+
+  // Get chain name from chainId
+  const getChainName = (chainId: number) => {
+    const chains: Record<number, string> = {
+      1: "Ethereum",
+      137: "Polygon",
+      56: "BSC",
+      10: "Optimism",
+      42161: "Arbitrum"
+    };
+    return chains[chainId] || "Unknown";
+  };
+
+  // Format wallet address for display
+  const formatAddress = (address: string) => {
+    return address;
+  };
+
+  // Data for portfolio allocation pie chart
+  const portfolioAllocationData = portfolioCoins.map(coin => ({
+    name: coin.symbol,
+    value: coin.usdValue,
+  }));
+
+  // Colors for pie chart
+  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#a569bd', '#5dade2'];
+
   return (
     <div className="flex h-screen bg-[#171031] text-gray-200">
       {/* Sidebar */}
@@ -134,18 +310,19 @@ export default function Home() {
           Coin Portfolio
         </div>
 
+        {/* Navigation */}
         <nav className="mt-4 space-y-2 px-4">
           <a
             href="/"
             className="block py-2 px-4 text-white rounded hover:bg-[#FE664F]"
           >
-            Logout
+            Dashboard
           </a>
           <a
-            href="/home"
+            href="/portfolio"
             className="block py-2 px-4 rounded hover:bg-[#FE664F]"
           >
-            Home
+            Portfolio
           </a>
           <a
             href="/credit-score"
@@ -153,98 +330,172 @@ export default function Home() {
           >
             Credit Score
           </a>
-
-          <a href="#" className="block py-2 px-4 rounded hover:bg-[#FE664F]">
-            Asset Allocation Chart
+          <a href="/allocation" className="block py-2 px-4 rounded hover:bg-[#FE664F]">
+            Asset Allocation
           </a>
-
-          <a href="#" className="block py-2 px-4 rounded hover:bg-[#FE664F]">
+          <a href="/actions" className="block py-2 px-4 rounded hover:bg-[#FE664F]">
             Quick Actions
           </a>
-          <a href="#" className="block py-2 px-4 hover:bg-gray-700">
+          <a href="/discover" className="block py-2 px-4 hover:bg-[#FE664F]">
             Discover
           </a>
-
-          <a href="#" className="block py-2 px-4 rounded hover:bg-[#FE664F]">
+          <a href="/docs" className="block py-2 px-4 rounded hover:bg-[#FE664F]">
             Docs
           </a>
         </nav>
 
-        {/* Exchanges Section */}
-        <div className="mt-8 px-4">
-          <h2 className="text-sm font-medium mb-2 text-[#01F3F4]">
-            Your Exchanges
-          </h2>
-          <ul className="space-y-2">
-            <li className="flex items-center space-x-2">
-              <span className="w-6 h-6 rounded-full bg-yellow-500"></span>
-              <span>Binance</span>
-            </li>
-            <li className="flex items-center space-x-2">
-              <span className="w-6 h-6 rounded-full bg-blue-500"></span>
-              <span>Photon</span>
-            </li>
-            <li className="flex items-center space-x-2">
-              <span className="w-6 h-6 rounded-full bg-red-500"></span>
-              <span>Bitmex</span>
-            </li>
-          </ul>
+        {/* Trading Categories Section */}
+        <div className="mt-6" id="trading-options">
+          <h2 className="text-xl font-bold mb-4 px-4 text-[#01F3F4]">Trading Options</h2>
+          
+          {/* Category Tabs */}
+          <div className="flex flex-wrap px-4 space-x-2 mb-4">
+            {tradingCategories.map((category, index) => (
+              <button 
+                key={index}
+                className={`px-3 py-1 rounded-t-lg font-medium text-xs ${
+                  activeCategory === index 
+                    ? 'bg-[#171031] text-[#01F3F4] border-b-2 border-[#01F3F4]' 
+                    : 'bg-[#120D24] text-gray-400 hover:bg-[#171031]'
+                }`}
+                onClick={() => setActiveCategory(index)}
+              >
+                {category.title}
+              </button>
+            ))}
+          </div>
+          
+          {/* Preview of selected category */}
+          <div className="px-4">
+            <div className="p-3 rounded-lg bg-[#120D24] border border-gray-800">
+              <div className="flex justify-between items-center mb-2">
+                <span className="font-medium text-sm">{tradingCategories[activeCategory].title}</span>
+                <span className={`px-2 py-0.5 rounded-full text-xs ${
+                  activeCategory === 0 ? 'bg-green-900 text-green-300' : 
+                  activeCategory === 1 ? 'bg-yellow-900 text-yellow-300' : 
+                  'bg-red-900 text-red-300'
+                }`}>
+                  {tradingCategories[activeCategory].riskLevel}
+                </span>
+              </div>
+              <p className="text-xs text-gray-400 mb-2">{tradingCategories[activeCategory].description}</p>
+              <div className="text-xs">
+                <span className="text-gray-400">Top coins: </span>
+                {tradingCategories[activeCategory].coins.slice(0, 3).map((coin, i) => (
+                  <span key={i} className="mr-1">
+                    {coin.symbol}
+                    {i < 2 && ", "}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Wallets Section */}
         <div className="mt-8 px-4">
-          <h2 className="text-sm font-medium mb-2 text-[#01F3F4]">
-            Your Wallets
-          </h2>
-          <ul className="space-y-2">
-            {wallets.map((wallet, index) => (
-              <li key={index} className="flex items-center space-x-2">
-                <span className="w-6 h-6 rounded-full bg-gray-500"></span>
-                <span>{wallet}</span>
+          <div className="flex justify-between items-center mb-2">
+            <h2 className="text-sm font-medium text-[#01F3F4]">
+              Your Wallets
+            </h2>
+            <span className="text-xs text-green-400">
+              Total: {formatUSD(totalWalletBalance)}
+            </span>
+          </div>
+          
+          {/* Wallet list */}
+          <ul className="space-y-2 max-h-48 overflow-y-auto pr-1 mb-3">
+            {connectedWallets.map((wallet) => (
+              <li key={wallet.id} className="flex items-center justify-between p-2 rounded bg-[#1A1339] hover:bg-[#231A45]">
+                <div className="flex items-center space-x-2">
+                  <span className="w-6 h-6 rounded-full bg-gray-500 flex-shrink-0"></span>
+                  <div className="flex flex-col">
+                    <span className="text-sm">{wallet.name}</span>
+                    <span className="text-xs text-gray-400">{formatAddress(wallet.address)}</span>
+                  </div>
+                </div>
+                <div className="flex flex-col items-end">
+                  <span className="text-sm font-medium text-green-300">
+                    {walletBalances[wallet.address] || "$0.00"}
+                  </span>
+                  <span className="text-xs text-gray-400">{getChainName(wallet.chainId)}</span>
+                </div>
               </li>
             ))}
           </ul>
-        </div>
-
-        {/* Add Wallet Input */}
-        <div className="px-5 mt-4">
-          <input
-            type="text"
-            value={newWallet}
-            onChange={(e) => setNewWallet(e.target.value)}
-            className="w-full p-2 rounded bg-[#1e1f2b] text-gray-200"
-            placeholder="Add new wallet"
-          />
-          <button
-            onClick={handleAddWallet}
-            className="mt-2 bg-[#FE664F] text-white px-4 py-2 rounded hover:bg-[#d9434f] w-full"
-          >
-            Add Wallet
-          </button>
+          
+          {/* Add Wallet Button/Form */}
+          {!showWalletForm ? (
+            <button
+              onClick={() => setShowWalletForm(true)}
+              className="w-full bg-[#FE664F] text-white px-3 py-1 rounded text-sm hover:bg-[#d9434f] flex items-center justify-center"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+              Add Wallet
+            </button>
+          ) : (
+            <div className="bg-[#1A1339] p-3 rounded">
+              <input
+                type="text"
+                value={newWallet}
+                onChange={(e) => setNewWallet(e.target.value)}
+                className="w-full p-2 mb-2 rounded bg-[#120D24] text-gray-200 text-sm"
+                placeholder="Wallet name"
+              />
+              <input
+                type="text"
+                value={newWalletBalance}
+                onChange={(e) => setNewWalletBalance(e.target.value)}
+                className="w-full p-2 mb-2 rounded bg-[#120D24] text-gray-200 text-sm"
+                placeholder="Balance (e.g. $1000)"
+              />
+              <div className="flex space-x-2">
+                <button
+                  onClick={handleAddWallet}
+                  className="flex-1 bg-[#01F3F4] text-[#171031] px-2 py-1 rounded text-sm hover:bg-[#00D1D2]"
+                >
+                  Add
+                </button>
+                <button
+                  onClick={() => setShowWalletForm(false)}
+                  className="flex-1 bg-gray-600 text-white px-2 py-1 rounded text-sm hover:bg-gray-500"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </aside>
 
       {/* Main Content */}
       <main className="flex-1 overflow-y-auto p-6 bg-[#120D24]">
-        {/* Header */}
-        <div className="flex justify-between items-center">
+        {/* Header with Total Portfolio Value */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
           <div>
             <h1 className="text-2xl font-bold text-[#01F3F4]">Dashboard</h1>
-            <p className="text-sm text-gray-400">Main Account - Bybit</p>
+            <p className="text-sm text-gray-400">Main Account</p>
           </div>
-          <div className="flex items-center space-x-4">
-            <span>$30,701.95</span>
-            <span>0.84253 BTC</span>
+          
+          {/* Total Portfolio Value */}
+          <div className="mt-3 sm:mt-0 bg-[#171031] p-3 rounded-lg flex items-center">
+            <div className="flex flex-col items-center mr-4">
+              <span className="text-xs text-gray-400">Total Portfolio Value</span>
+              <span className="font-bold text-green-400 text-xl">{formatUSD(totalPortfolioValue)}</span>
+            </div>
+            <ConnectButton showBalance={false} />
           </div>
         </div>
-
-        {/* Performance Summary */}
-        <div className="grid grid-cols-4 gap-4 mt-6">
+        
+        {/* Performance Indicators */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <div className="bg-[#171031] p-4 rounded text-center">
             <h2 className="text-sm font-medium text-gray-400">
               Cryptocurrency Holdings
             </h2>
-            <p className="text-lg font-bold text-white">$15,000</p>
+            <p className="text-lg font-bold text-white">{formatUSD(totalPortfolioValue)}</p>
           </div>
           <div className="bg-[#171031] p-4 rounded text-center">
             <h2 className="text-sm font-medium text-gray-400">
@@ -263,6 +514,97 @@ export default function Home() {
               Historical Performance
             </h2>
             <p className="text-lg font-bold text-green-400">+23.45%</p>
+          </div>
+        </div>
+        
+        {/* Portfolio Summary */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+          {/* Portfolio Distribution Chart */}
+          <div className="bg-[#171031] p-6 rounded-lg">
+            <h2 className="text-lg font-medium mb-4 text-[#01F3F4]">Portfolio Allocation</h2>
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={portfolioAllocationData}
+                    innerRadius={60}
+                    outerRadius={80}
+                    paddingAngle={5}
+                    dataKey="value"
+                    label={({name, percent}) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  >
+                    {portfolioAllocationData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip formatter={(value) => formatUSD(value as number)} />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Portfolio Balance By Coin */}
+          <div className="lg:col-span-2 bg-[#171031] p-6 rounded-lg">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-medium text-[#01F3F4]">Coin Balances</h2>
+              <button className="text-sm bg-[#FE664F] text-white px-3 py-1 rounded hover:bg-[#d9434f]">
+                Add Coins
+              </button>
+            </div>
+            <div className="overflow-x-auto max-h-64">
+              <table className="w-full">
+                <thead className="text-xs text-gray-400 uppercase bg-[#1A1339]">
+                  <tr>
+                    <th className="py-2 px-4 text-left">Coin</th>
+                    <th className="py-2 px-4 text-right">Balance</th>
+                    <th className="py-2 px-4 text-right">Value</th>
+                    <th className="py-2 px-4 text-right">24h</th>
+                    <th className="py-2 px-4 text-center">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-800">
+                  {portfolioCoins.map((coin, index) => (
+                    <tr key={index} className="hover:bg-[#1A1339]">
+                      <td className="py-3 px-4">
+                        <div className="flex items-center">
+                          <div className="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center mr-2 text-xs font-bold">
+                            {coin.symbol}
+                          </div>
+                          <div>
+                            <div className="font-medium">{coin.name}</div>
+                            <div className="text-xs text-gray-400">{coin.symbol}</div>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="py-3 px-4 text-right">
+                        <div className="font-medium">{coin.amount}</div>
+                        <div className="text-xs text-gray-400">{coin.symbol}</div>
+                      </td>
+                      <td className="py-3 px-4 text-right">
+                        <div className="font-medium">{formatUSD(coin.usdValue)}</div>
+                        <div className="text-xs text-gray-400">{((coin.usdValue / totalPortfolioValue) * 100).toFixed(1)}% of portfolio</div>
+                      </td>
+                      <td className="py-3 px-4 text-right">
+                        <span className={coin.percentChange >= 0 ? "text-green-400" : "text-red-400"}>
+                          {coin.percentChange >= 0 ? "+" : ""}{coin.percentChange}%
+                        </span>
+                      </td>
+                      <td className="py-3 px-4 text-center">
+                        <div className="flex justify-center space-x-2">
+                          <button className="text-xs bg-[#01F3F4] text-[#171031] px-2 py-1 rounded hover:bg-[#00D1D2]">
+                            Buy
+                          </button>
+                          <button className="text-xs bg-[#FE664F] text-white px-2 py-1 rounded hover:bg-[#d9434f]">
+                            Sell
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 

@@ -11,8 +11,7 @@ const Home: React.FC = () => {
       <Layout>
         <Hero />
         <Feature />
-        <Pricing />
-      
+        <Pricing />      
       </Layout>
     </>
   );

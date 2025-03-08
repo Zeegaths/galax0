@@ -64,7 +64,7 @@ const Hero: React.FC<HeroProps> = ({
           <div className="flex w-full">
             <motion.div className="h-full w-full" variants={scrollAnimation}>
               <Image
-                src="/assets/Group 3.png"
+                src="/assets/Group_3.png"
                 alt="VPN Illustration"
                 quality={100}
                 width={612}
