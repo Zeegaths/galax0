@@ -130,7 +130,7 @@ const Testimoni = () => {
                   </span>
                 </div>
               </div>
-              <p className="mt-5 text-left">"{testimoni.testimoni}"</p>
+              <p className="mt-5 text-left">&quot;{testimoni.testimoni}&quot;</p>
             </div>
           </div>
         ))}

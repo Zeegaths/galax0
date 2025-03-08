@@ -95,7 +95,7 @@ const CreditScore: React.FC = () => {
         });
 
         // Set positive factors based on score
-        const positives = [];
+        const positives: string[] = [];
         if (transactionScore > 200) 
           positives.push("Regular transaction frequency across multiple chains indicates active wallet use.");
         if (assetScore > 180) 
@@ -107,7 +107,7 @@ const CreditScore: React.FC = () => {
         setPositiveFactors(positives.length ? positives : ["No significant positive factors identified yet."]);
 
         // Set improvement areas
-        const improvements = [];
+        const improvements: string[] = [];
         if (transactionScore < 200) 
           improvements.push("Increase regular transaction activity to establish a consistent on-chain presence.");
         if (assetScore < 180) 

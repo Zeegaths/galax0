@@ -5,6 +5,7 @@ import "slick-carousel/slick/slick-theme.css";
 import "tailwindcss/tailwind.css";
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import Link from 'next/link';
+
 import {
   LineChart,
   Line,
@@ -90,14 +91,14 @@ export default function Home(): React.ReactElement {
   const [connectedWallets, setConnectedWallets] = useState<ConnectedWallet[]>([]);
   
   // Wallet balances
-  const [walletBalances, setWalletBalances] = useState<Record<string, string>>({
+  const [walletBalances] = useState<Record<string, string>>({
     "0x1234...5678": "$12,450.32",
     "0x8765...4321": "$8,750.65",
     "0x5432...8765": "$9,500.98",
   });
 
   // Portfolio coin holdings
-  const [portfolioCoins, setPortfolioCoins] = useState<PortfolioCoin[]>([
+  const [portfolioCoins] = useState<PortfolioCoin[]>([
     { name: "Bitcoin", symbol: "BTC", amount: "0.42", usdValue: 30289.76, percentChange: 2.3 },
     { name: "Ethereum", symbol: "ETH", amount: "5.8", usdValue: 23093.69, percentChange: 1.8 },
     { name: "Solana", symbol: "SOL", amount: "62.5", usdValue: 10778.13, percentChange: 4.2 },
@@ -179,37 +180,37 @@ export default function Home(): React.ReactElement {
   }, []);
 
   // Function to connect additional wallets
-  const connectAdditionalWallet = () => {
-    // In a real implementation, this would trigger the RainbowKit modal
-    alert("Connect wallet functionality would open the RainbowKit wallet selection modal");
+  // const connectAdditionalWallet = () => {
+  //   // In a real implementation, this would trigger the RainbowKit modal
+  //   <ConnectButton/>
     
-    // Simulate adding a new wallet after connection
-    const newWalletAddress = `0x${Math.random().toString(16).slice(2, 10)}...${Math.random().toString(16).slice(2, 10)}`;
-    const randomBalance = `$${(Math.random() * 10000).toFixed(2)}`;
+  //   // Simulate adding a new wallet after connection
+  //   const newWalletAddress = `0x${Math.random().toString(16).slice(2, 10)}...${Math.random().toString(16).slice(2, 10)}`;
+  //   const randomBalance = `$${(Math.random() * 10000).toFixed(2)}`;
     
-    // Update balances
-    setWalletBalances(prev => ({
-      ...prev,
-      [newWalletAddress]: randomBalance
-    }));
+  //   // Update balances
+  //   setWalletBalances(prev => ({
+  //     ...prev,
+  //     [newWalletAddress]: randomBalance
+  //   }));
     
-    // Add to connected wallets
-    const walletProviders = ["Rainbow", "Trust Wallet", "Ledger", "Phantom", "Argent"];
-    const randomProvider = walletProviders[Math.floor(Math.random() * walletProviders.length)];
-    const iconColors = ["green", "purple", "teal", "orange", "pink"];
-    const randomIcon = iconColors[Math.floor(Math.random() * iconColors.length)];
+  //   // Add to connected wallets
+  //   const walletProviders = ["Rainbow", "Trust Wallet", "Ledger", "Phantom", "Argent"];
+  //   const randomProvider = walletProviders[Math.floor(Math.random() * walletProviders.length)];
+  //   const iconColors = ["green", "purple", "teal", "orange", "pink"];
+  //   const randomIcon = iconColors[Math.floor(Math.random() * iconColors.length)];
     
-    setConnectedWallets(prev => [
-      ...prev,
-      { 
-        id: prev.length + 1, 
-        address: newWalletAddress, 
-        name: randomProvider, 
-        icon: randomIcon,
-        chainId: Math.random() > 0.5 ? 1 : 137
-      }
-    ]);
-  };
+  //   setConnectedWallets(prev => [
+  //     ...prev,
+  //     { 
+  //       id: prev.length + 1, 
+  //       address: newWalletAddress, 
+  //       name: randomProvider, 
+  //       icon: randomIcon,
+  //       chainId: Math.random() > 0.5 ? 1 : 137
+  //     }
+  //   ]);
+  // };
 
   // Function to add a custom wallet
   const handleAddWallet = () => {
@@ -319,12 +320,12 @@ export default function Home(): React.ReactElement {
           >
             Dashboard
           </Link>
-          <a
+          <Link
             href="/home"
             className="block py-2 px-4 rounded hover:bg-[#FE664F]"
           >
             Portfolio
-          </a>
+          </Link>
           <Link
             href="/credit-score"
             className="block py-2 px-4 rounded hover:bg-[#FE664F]"

@@ -40,7 +40,7 @@ const TradingMatrixBackground: React.FC = () => {
     const columns = canvas.width / fontSize;
     
     // Create drops at different positions
-    const drops = [];
+    const drops: number[] = [];
     for (let i = 0; i < columns; i++) {
       drops[i] = Math.floor(Math.random() * -100); // Start above the canvas at random positions
     }

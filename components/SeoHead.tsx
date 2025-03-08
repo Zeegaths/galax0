@@ -15,12 +15,17 @@ const defaultMeta = {
   author: "Lorem Ipsum",
 };
 
-const SeoHead = (props: Partial<typeof defaultMeta>) => {
+// Define a type for our metadata
+type MetaProps = typeof defaultMeta & {
+  date?: string;
+};
+
+const SeoHead = (props: Partial<MetaProps>) => {
   const pathname = usePathname();
   const meta = {
     ...defaultMeta,
     ...props,
-  };
+  } as MetaProps;
 
   // Use siteName if there is templateTitle
   // but show full title if there is none
@@ -45,10 +50,11 @@ const SeoHead = (props: Partial<typeof defaultMeta>) => {
       <meta name="twitter:title" content={meta.title} />
       <meta name="twitter:description" content={meta.description} />
       <meta name="twitter:image" content={meta.image} />
-      {meta.date && (
+      {/* Date and Author metadata */}
+      {props.date && (
         <>
-          <meta property="article:published_time" content={meta.date} />
-          <meta name="publish_date" property="og:publish_date" content={meta.date} />
+          <meta property="article:published_time" content={props.date} />
+          <meta name="publish_date" property="og:publish_date" content={props.date} />
           <meta name="author" property="article:author" content={meta.author} />
         </>
       )}
